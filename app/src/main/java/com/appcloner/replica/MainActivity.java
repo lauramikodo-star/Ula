@@ -102,13 +102,29 @@ public class MainActivity extends AppCompatActivity {
         SPECIAL_TOKENS = Collections.unmodifiableMap(tokens);
 
         Map<String, List<String>> order = new HashMap<>();
+        // "build" is the prefix for individual props, "build_props" is the virtual group key
         order.put("build", Arrays.asList("enabled", "name", "manufacturer", "brand", "model", "product", "device", "hardware", "fingerprint"));
+        order.put("build_props", Arrays.asList("enabled", "device_preset", "randomize_fingerprint", "MANUFACTURER", "MODEL", "BRAND", "DEVICE", "PRODUCT", "FINGERPRINT"));
         order.put("socks_proxy", Arrays.asList("enabled", "host", "port", "user", "pass", "alternative_mode", "api", "enable_placeholders", "list_random_proxy"));
-        order.put("FakeCamera", Arrays.asList("Enabled"));
+        order.put("FakeCamera", Arrays.asList("Enabled", "Rotation", "AlternativeMode", "AppSupport", "CloseStreamWorkaround", "FixOrientation", "UseOriginalImageFile", "FloatingMenu", "FlipHorizontally", "RandomizeImage", "RandomizeStrength", "ResizeImage", "AddExifAttributes", "ForcedBackCamera", "OpenStreamWorkaround"));
         order.put("floating", Arrays.asList("enabled", "window_width", "window_height", "window_x", "window_y"));
         order.put("background_media", Arrays.asList("webview", "mediaplayer", "exoplayer", "audio_focus"));
         order.put("SpoofLocation", Arrays.asList("Latitude", "Longitude", "Altitude", "Accuracy", "ShowNotification", "Api", "UseIpLocation", "Interval", "CompatibilityMode", "SimulatePositionalUncertainty", "CalculateBearing", "Speed", "Bearing", "Randomize"));
-        order.put("accessible_data_dir", Arrays.asList("internal_enabled", "external_enabled", "mode", "advanced_mode", "advanced_interval"));
+        // Correct suffixes for accessible_data_dir (prefix + suffix = full key)
+        // e.g. accessible_data_dir + "_" + internal = accessible_data_dir_internal
+        order.put("accessible_data_dir", Arrays.asList("internal", "external", "mode", "advanced_mode", "advanced_interval"));
+        order.put("hide_sim_operator", Arrays.asList("spoofed_operator_name", "spoofed_operator_numeric", "spoofed_sim_country_iso"));
+        order.put("hide_gpu_info", Arrays.asList("gpu_vendor", "gpu_renderer", "gpu_version"));
+        order.put("hide_cpu_info", Arrays.asList());
+        order.put("icon_options", Arrays.asList("icon_color", "icon_hue", "icon_saturation", "icon_lightness", "icon_auto_hue", "icon_invert_colors", "icon_sepia", "icon_rotation", "icon_flip_horizontal", "icon_flip_vertical", "icon_badge", "icon_badge_position"));
+
+        // Groups with specific children not sharing prefix
+        order.put("dialog_blocker_enabled", Arrays.asList("block_update_dialogs", "block_rating_dialogs", "block_ad_dialogs", "block_subscription_dialogs", "dialog_block_keywords"));
+        order.put("fake_calculator_enabled", Arrays.asList("fake_calculator_passcode", "fake_calculator_ask_once"));
+        order.put("disable_background_networking", Arrays.asList("disable_background_networking_delay", "disable_background_networking_silent"));
+        order.put("change_system_user_agent", Arrays.asList("system_user_agent"));
+        order.put("hide_dns_servers", Arrays.asList("hide_dns_servers_completely"));
+
         GROUP_CHILD_ORDER = Collections.unmodifiableMap(order);
 
         // Define categories with their child settings
@@ -127,112 +143,50 @@ public class MainActivity extends AppCompatActivity {
                 "hide_emulator",
                 "DisableNetworkingWithoutVpn",
                 "NoBackgroundServices",
+                "disable_background_networking",
                 "disable_license_validation",
-                "SpoofLocation",
-                "SpoofLocationLatitude",
-                "SpoofLocationLongitude",
-                "SpoofLocationAltitude",
-                "SpoofLocationAccuracy",
-                "SpoofLocationShowNotification",
-                "SpoofLocationApi",
-                "SpoofLocationUseIpLocation",
-                "SpoofLocationInterval",
-                "SpoofLocationCompatibilityMode",
-                "SpoofLocationSimulatePositionalUncertainty",
-                "SpoofLocationCalculateBearing",
-                "SpoofLocationSpeed",
-                "SpoofLocationBearing",
-                "SpoofLocationRandomize"
+                "SpoofLocation"
         ));
         categories.put("cat_network", Arrays.asList(
                 "socks_proxy",
-                "socks_proxy_host",
-                "socks_proxy_port",
-                "socks_proxy_user",
-                "socks_proxy_pass",
                 "mock_wifi_connection",
                 "mock_mobile_connection",
-                "mock_ethernet_connection"
+                "mock_ethernet_connection",
+                "hide_sim_operator",
+                "hide_dns_servers"
         ));
         categories.put("cat_webview", Arrays.asList(
                 "user_agent_hook_enabled",
                 "user_agent",
+                "change_system_user_agent",
                 "internal_browser_enabled"
         ));
         categories.put("cat_media", Arrays.asList(
                 "background_media",
-                "background_media_webview",
-                "background_media_mediaplayer",
-                "background_media_exoplayer",
-                "background_media_audio_focus",
                 "keep_playing_media",
-                "keep_playing_media_compatibility_mode",
-                "FakeCamera",
-                "FakeCameraRotation",
-                "FakeCameraAlternativeMode",
-                "FakeCameraAppSupport",
-                "FakeCameraOpenStreamWorkaround",
-                "FakeCameraCloseStreamWorkaround",
-                "FakeCameraFixOrientation",
-                "FakeCameraUseOriginalImageFile",
-                "FakeCameraFloatingMenu",
-                "FlipHorizontally",
-                "RandomizeImage",
-                "RandomizeStrength",
-                "ResizeImage",
-                "AddExifAttributes",
-                "ForcedBackCamera"
+                "FakeCamera"
         ));
         categories.put("cat_data", Arrays.asList(
-                "accessible_data_dir_internal",
-                "accessible_data_dir_external",
-                "accessible_data_dir_mode",
-                "accessible_data_dir_advanced_mode",
-                "accessible_data_dir_advanced_interval",
+                "accessible_data_dir", // Virtual group for storage settings
                 "bundle_app_data"
         ));
         categories.put("cat_display", Arrays.asList(
                 "AllowScreenshots",
                 "screenshot_detection_blocker",
                 "app_name",
-                "icon_color",
-                "icon_hue",
-                "icon_saturation",
-                "icon_lightness",
-                "icon_auto_hue",
-                "icon_invert_colors",
-                "icon_sepia",
-                "icon_rotation",
-                "icon_flip_horizontal",
-                "icon_flip_vertical",
-                "icon_badge",
-                "icon_badge_position"
+                "icon_options" // Virtual group for icon settings
         ));
         categories.put("cat_developer", Arrays.asList(
                 "cloning_mode",
                 "custom_package_name",
                 "package_name_workaround",
-                "build_props_enabled",
-                "build_props_device_preset",
-                "build_props_randomize_fingerprint",
-                "build_MANUFACTURER",
-                "build_MODEL",
-                "build_BRAND",
-                "build_DEVICE",
-                "build_PRODUCT",
-                "build_FINGERPRINT",
+                "build_props", // Virtual group for build props
+                "hide_cpu_info",
+                "hide_gpu_info",
                 "custom_build_props",
                 "dialog_blocker_enabled",
-                "block_update_dialogs",
-                "block_rating_dialogs",
-                "block_ad_dialogs",
-                "block_subscription_dialogs",
-                "dialog_block_keywords",
                 "fake_calculator_enabled",
-                "fake_calculator_passcode",
-                "fake_calculator_ask_once",
                 "skip_dialogs",
-                "skip_dialogs_stacktraces",
                 "monitor_stacktraces",
                 "local_web_console_enabled",
                 "host_monitor_enabled",
@@ -832,6 +786,12 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        // Special handling for Icon Options
+        if ("icon_options".equals(groupSetting.key)) {
+            showIconColorDialog(groupSetting, json, adapter);
+            return;
+        }
+
         final String title = formatGroupTitle(groupSetting.key);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -851,7 +811,10 @@ public class MainActivity extends AppCompatActivity {
         List<Setting> orderedChildren = new ArrayList<>(groupSetting.children);
         sortGroupChildren(groupSetting.key, orderedChildren);
 
+        // Identify the toggle/enable setting for this group
         Setting toggleSetting = null;
+
+        // Strategy 1: Check for explicit "enabled" suffix in children
         for (Setting child : orderedChildren) {
             if (isToggleKey(groupSetting.key, child.key)) {
                 toggleSetting = child;
@@ -859,8 +822,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        // Strategy 2: If the group key itself corresponds to a boolean setting (e.g. SpoofLocation)
+        // then the group setting itself IS the toggle.
+        if (toggleSetting == null && groupSetting.value instanceof Boolean) {
+            toggleSetting = groupSetting;
+        }
+
         if (toggleSetting != null) {
             com.google.android.material.checkbox.MaterialCheckBox enableCheckBox = new com.google.android.material.checkbox.MaterialCheckBox(this);
+            // Use the group title for the enable checkbox text
             enableCheckBox.setText("Enable " + title);
             boolean checked = toggleSetting.value instanceof Boolean && (Boolean) toggleSetting.value;
             enableCheckBox.setChecked(checked);
@@ -869,7 +839,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         for (Setting child : orderedChildren) {
-            if (toggleSetting != null && toggleSetting.key.equals(child.key)) {
+            // Skip if this child is the toggle we just rendered (Strategy 1)
+            if (toggleSetting != null && toggleSetting.key.equals(child.key) && toggleSetting != groupSetting) {
                 continue;
             }
 
@@ -1094,7 +1065,23 @@ public class MainActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancel", null);
         builder.setPositiveButton("OK", (dialog, which) -> {
             try {
+                // Save the toggle setting if it was part of the dialog inputs
+                if (toggleSetting != null && inputs.containsKey(toggleSetting.key)) {
+                    View inputView = inputs.get(toggleSetting.key);
+                    if (inputView instanceof CheckBox) {
+                        boolean checked = ((CheckBox) inputView).isChecked();
+                        toggleSetting.value = checked;
+                        toggleSetting.valueClass = Boolean.class;
+                        json.put(toggleSetting.key, checked);
+                    }
+                }
+
                 for (Setting child : groupSetting.children) {
+                    // Skip if this child is the toggle we already handled above (Strategy 1)
+                    if (toggleSetting != null && toggleSetting.key.equals(child.key) && toggleSetting != groupSetting) {
+                        continue;
+                    }
+
                     View inputView = inputs.get(child.key);
                     if (inputView == null) {
                         continue;
@@ -2750,9 +2737,13 @@ public class MainActivity extends AppCompatActivity {
         circleParams.setMarginEnd((int)(12 * density));
         colorPreviewCircle.setLayoutParams(circleParams);
         colorPreviewCircle.setBackgroundResource(R.drawable.icon_background_circle);
-        String currentValue = setting.value != null ? setting.value.toString() : "#FFFFFF";
+
+        // FIX: Read from "icon_color" explicitly, handling null or virtual group setting
+        String initialColor = json.optString("icon_color", CloneSettings.DEFAULT_ICON_COLOR);
+        if (initialColor.isEmpty()) initialColor = "#FFFFFF";
+
         try {
-            colorPreviewCircle.getBackground().setTint(android.graphics.Color.parseColor(currentValue));
+            colorPreviewCircle.getBackground().setTint(android.graphics.Color.parseColor(initialColor));
         } catch (Exception e) {
             colorPreviewCircle.getBackground().setTint(android.graphics.Color.WHITE);
         }
@@ -2761,7 +2752,7 @@ public class MainActivity extends AppCompatActivity {
         final com.google.android.material.textfield.TextInputEditText input = new com.google.android.material.textfield.TextInputEditText(this);
         input.setHint("#FFFFFF");
         input.setSingleLine(true);
-        input.setText(currentValue);
+        input.setText(initialColor);
         LinearLayout.LayoutParams inputParams = new LinearLayout.LayoutParams(
             0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
         input.setLayoutParams(inputParams);
@@ -2838,6 +2829,13 @@ public class MainActivity extends AppCompatActivity {
         adjustHeader.setLayoutParams(adjustParams);
         container.addView(adjustHeader);
 
+        // FIX: Use an array to hold mutable state instead of setTag/getTag
+        final float[] hslState = new float[] {
+            (float) json.optDouble("icon_hue", CloneSettings.DEFAULT_ICON_HUE),
+            (float) json.optDouble("icon_saturation", CloneSettings.DEFAULT_ICON_SATURATION),
+            (float) json.optDouble("icon_lightness", CloneSettings.DEFAULT_ICON_LIGHTNESS)
+        };
+
         Runnable updatePreview = () -> {
             if (iconPreview == null || originalIcon == null) {
                 return;
@@ -2857,13 +2855,9 @@ public class MainActivity extends AppCompatActivity {
                     colorPreviewCircle.getBackground().setTint(android.graphics.Color.parseColor(colorText));
                 } catch (Exception e) { }
 
-                Number hueValue = (Number) scrollView.getTag(R.id.icon_hue_value);
-                Number saturationValue = (Number) scrollView.getTag(R.id.icon_saturation_value);
-                Number lightnessValue = (Number) scrollView.getTag(R.id.icon_lightness_value);
-
-                float hue = hueValue != null ? hueValue.floatValue() : CloneSettings.DEFAULT_ICON_HUE;
-                float saturation = saturationValue != null ? saturationValue.floatValue() : CloneSettings.DEFAULT_ICON_SATURATION;
-                float lightness = lightnessValue != null ? lightnessValue.floatValue() : CloneSettings.DEFAULT_ICON_LIGHTNESS;
+                float hue = hslState[0];
+                float saturation = hslState[1];
+                float lightness = hslState[2];
 
                 Bitmap previewBitmap = IconProcessor.processIconDrawable(
                         originalIcon,
@@ -2888,16 +2882,16 @@ public class MainActivity extends AppCompatActivity {
         };
 
         // Hue controls
-        addSlider(container, "Hue", -180, 180,
-                (float) json.optDouble("icon_hue", CloneSettings.DEFAULT_ICON_HUE), updatePreview);
+        addSlider(container, "Hue", -180, 180, hslState[0],
+                (val) -> { hslState[0] = val; updatePreview.run(); });
 
         // Saturation controls
-        addSlider(container, "Saturation", -100, 100,
-                (float) json.optDouble("icon_saturation", CloneSettings.DEFAULT_ICON_SATURATION), updatePreview);
+        addSlider(container, "Saturation", -100, 100, hslState[1],
+                (val) -> { hslState[1] = val; updatePreview.run(); });
 
         // Lightness controls
-        addSlider(container, "Lightness", -100, 100,
-                (float) json.optDouble("icon_lightness", CloneSettings.DEFAULT_ICON_LIGHTNESS), updatePreview);
+        addSlider(container, "Lightness", -100, 100, hslState[2],
+                (val) -> { hslState[2] = val; updatePreview.run(); });
 
         autoHueSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> updatePreview.run());
         invertColorsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> updatePreview.run());
@@ -2927,18 +2921,12 @@ public class MainActivity extends AppCompatActivity {
                 if (!colorText.startsWith("#")) {
                     colorText = "#" + colorText;
                 }
-                Number hueValue = (Number) scrollView.getTag(R.id.icon_hue_value);
-                Number saturationValue = (Number) scrollView.getTag(R.id.icon_saturation_value);
-                Number lightnessValue = (Number) scrollView.getTag(R.id.icon_lightness_value);
-                float hue = hueValue != null ? hueValue.floatValue() : CloneSettings.DEFAULT_ICON_HUE;
-                float saturation = saturationValue != null ? saturationValue.floatValue() : CloneSettings.DEFAULT_ICON_SATURATION;
-                float lightness = lightnessValue != null ? lightnessValue.floatValue() : CloneSettings.DEFAULT_ICON_LIGHTNESS;
-                setting.value = colorText;
-                setting.valueClass = String.class;
-                json.put(setting.key, colorText);
-                json.put("icon_hue", hue);
-                json.put("icon_saturation", saturation);
-                json.put("icon_lightness", lightness);
+
+                // FIX: Save using "icon_color" key explicitly
+                json.put("icon_color", colorText);
+                json.put("icon_hue", hslState[0]);
+                json.put("icon_saturation", hslState[1]);
+                json.put("icon_lightness", hslState[2]);
                 json.put("icon_auto_hue", autoHueSwitch.isChecked());
                 json.put("icon_invert_colors", invertColorsSwitch.isChecked());
                 json.put("icon_sepia", sepiaSwitch.isChecked());
@@ -2953,7 +2941,12 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void addSlider(LinearLayout container, String labelText, int min, int max, float currentValue, Runnable onValueChanged) {
+    // Helper interface for slider callbacks
+    private interface OnSliderValueChanged {
+        void onValueChanged(int value);
+    }
+
+    private void addSlider(LinearLayout container, String labelText, int min, int max, float currentValue, final OnSliderValueChanged listener) {
         float density = getResources().getDisplayMetrics().density;
         TextView labelView = new TextView(this);
         labelView.setText(labelText);
@@ -2982,19 +2975,8 @@ public class MainActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 int value = progress + min;
                 valueLabel.setText(String.valueOf(value));
-                if (container.getParent() instanceof ScrollView) {
-                    ScrollView scrollView = (ScrollView) container.getParent();
-                    if ("Hue".equals(labelText)) {
-                        scrollView.setTag(R.id.icon_hue_value, value);
-                    } else if ("Saturation".equals(labelText)) {
-                        scrollView.setTag(R.id.icon_saturation_value, value);
-                    } else if ("Lightness".equals(labelText)) {
-                        scrollView.setTag(R.id.icon_lightness_value, value);
-                    }
-                }
-
-                if (onValueChanged != null) {
-                    onValueChanged.run();
+                if (listener != null) {
+                    listener.onValueChanged(value);
                 }
             }
 
@@ -4715,6 +4697,97 @@ public class MainActivity extends AppCompatActivity {
             
             List<Setting> categoryChildren = new ArrayList<>();
             for (String childKey : childKeys) {
+                // Special handling for virtual groups or groups with non-standard key naming
+                if ("icon_options".equals(childKey) ||
+                    "accessible_data_dir".equals(childKey) ||
+                    "build_props".equals(childKey) ||
+                    "hide_sim_operator".equals(childKey) ||
+                    "FakeCamera".equals(childKey) ||
+                    "SpoofLocation".equals(childKey) ||
+                    "hide_gpu_info".equals(childKey) ||
+                    "dialog_blocker_enabled".equals(childKey) ||
+                    "fake_calculator_enabled".equals(childKey) ||
+                    "disable_background_networking".equals(childKey) ||
+                    "change_system_user_agent".equals(childKey) ||
+                    "hide_dns_servers".equals(childKey)) {
+
+                    // If the group key itself exists as a setting (e.g. hide_sim_operator toggle), use it as parent
+                    // Otherwise create a virtual parent
+                    Setting groupParent = settingsByKey.get(childKey);
+                    if (groupParent == null) {
+                        groupParent = new Setting(childKey, null, null);
+                    }
+
+                    // Manually populate children from settingsByKey based on GROUP_CHILD_ORDER
+                    List<String> childSuffixes = GROUP_CHILD_ORDER.get(childKey);
+                    List<Setting> children = new ArrayList<>();
+
+                    if (childSuffixes != null) {
+                        for (String suffix : childSuffixes) {
+                            // Construct the full key.
+                            // For "icon_options", the suffixes ARE the full keys (e.g. icon_hue).
+                            // For "accessible_data_dir", they are suffixes (e.g. internal_enabled -> accessible_data_dir_internal_enabled ?? No.)
+                            // WAIT: GROUP_CHILD_ORDER for "icon_options" stores full keys.
+                            // GROUP_CHILD_ORDER for others stores SUFFIXES.
+
+                            String fullKey = suffix;
+                            // Check if this is a suffix-based group or a full-key list
+                            if (!settingsByKey.containsKey(fullKey)) {
+                                // Try constructing full key with prefix (underscore)
+                                String underscoreKey = childKey + "_" + suffix;
+                                if (settingsByKey.containsKey(underscoreKey)) {
+                                    fullKey = underscoreKey;
+                                } else {
+                                    // Try constructing full key with prefix (concatenation)
+                                    // e.g. FakeCamera + Rotation = FakeCameraRotation
+                                    String concatKey = childKey + suffix;
+                                    if (settingsByKey.containsKey(concatKey)) {
+                                        fullKey = concatKey;
+                                    } else {
+                                        // Default fallback to underscore if nothing found (though it won't exist)
+                                        fullKey = underscoreKey;
+                                    }
+                                }
+                            }
+
+                            // Special case for build_props "enabled" -> "build_props_enabled"
+                            if ("build_props".equals(childKey)) {
+                                if ("enabled".equals(suffix)) {
+                                    fullKey = "build_props_enabled";
+                                } else if (!settingsByKey.containsKey(fullKey)) {
+                                    // Try standard "build_" prefix for uppercase props (e.g. build_MANUFACTURER)
+                                    // or other props that might follow that pattern
+                                    String buildKey = "build_" + suffix;
+                                    if (settingsByKey.containsKey(buildKey)) {
+                                        fullKey = buildKey;
+                                    }
+                                }
+                            }
+
+                            Setting s = settingsByKey.get(fullKey);
+                            if (s != null) {
+                                children.add(s);
+                                s.parent = groupParent;
+                                processedKeys.add(fullKey);
+                            }
+                        }
+                    }
+                    groupParent.children = children;
+
+                    // Only add to category if it's a virtual group or wasn't already added
+                    // (Real settings might be processed normally but we want to ensure they are added as groups here)
+                    if (settingsByKey.get(childKey) == null) {
+                         categoryChildren.add(groupParent);
+                    } else {
+                         // If it's a real setting, it will be picked up by the standard logic below?
+                         // No, because we want to intercept it here to populate children manually from GROUP_CHILD_ORDER.
+                         // So we should add it here and mark it processed.
+                         categoryChildren.add(groupParent);
+                         processedKeys.add(childKey);
+                    }
+                    continue;
+                }
+
                 Setting setting = settingsByKey.get(childKey);
                 if (setting != null) {
                     categoryChildren.add(setting);
@@ -4733,6 +4806,7 @@ public class MainActivity extends AppCompatActivity {
                 result.add(categoryGroup);
             }
         }
+
 
         // Process remaining settings with prefix-based grouping (legacy behavior)
         Map<String, List<Setting>> prefixGrouped = new LinkedHashMap<>();
