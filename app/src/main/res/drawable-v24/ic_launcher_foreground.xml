@@ -1,0 +1,32 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Primary clone square - front (purple) -->
+    <path
+        android:pathData="M30,30L62,30A8,8 0,0 1,70 38L70,70A8,8 0,0 1,62 78L30,78A8,8 0,0 1,22 70L22,38A8,8 0,0 1,30 30z"
+        android:fillColor="#7C4DFF" />
+
+    <!-- Secondary clone square - back (lighter purple) -->
+    <path
+        android:pathData="M46,38L78,38A8,8 0,0 1,86 46L86,78A8,8 0,0 1,78 86L46,86A8,8 0,0 1,38 78L38,46A8,8 0,0 1,46 38z"
+        android:fillColor="#B388FF" />
+
+    <!-- Inner white square -->
+    <path
+        android:pathData="M50,46L74,46A5,5 0,0 1,79 51L79,75A5,5 0,0 1,74 80L50,80A5,5 0,0 1,45 75L45,51A5,5 0,0 1,50 46z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Inner detail square -->
+    <path
+        android:pathData="M55,52L69,52L69,72L55,72z"
+        android:fillColor="#7C4DFF" />
+
+    <!-- Plus icon -->
+    <path
+        android:pathData="M61,56L64,56L64,60L68,60L68,63L64,63L64,67L61,67L61,63L57,63L57,60L61,60z"
+        android:fillColor="#FFFFFF" />
+
+</vector>
