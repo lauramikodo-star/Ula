@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">App Cloner</string>
+    <string name="app_name_full">App Cloner</string>
+    <string name="splash_subtitle">Clone &amp; Modify Apps</string>
+    <string name="version_info">Version 1.0.0</string>
+    <string name="select_apk">Select APK</string>
+    <string name="process_apk">Process APK</string>
+    <string name="select_an_apk">Select an APK</string>
+    <string name="app_icon">App icon</string>
+    <string name="menu">Menu</string>
+    <string name="signing_note_title">Important: APK Signing Note</string>
+    <string name="signing_note_message">If the cloned app shows \"App not installed\" or \"App appears to be corrupted\" errors, you may need to re-sign it with a signing tool like:\n\n• APK Editor Pro\n• MT Manager\n• NP Manager\n• Apktool M\n\nThis app uses a generic debug signature which may be blocked by some device security features or app stores.</string>
+    <string name="signing_note_dont_show">Don\'t show again</string>
+    
+    <!-- Tab labels -->
+    <string name="tab_installed_apps">Installed Apps</string>
+    <string name="tab_cloned_apps">Cloned Apps</string>
+    <string name="tab_generated_apks">Generated APKs</string>
+    
+    <!-- Settings labels -->
+    <string name="setting_no_change">No change</string>
+    <string name="setting_enabled">Enabled</string>
+    <string name="setting_disabled">Disabled</string>
+    <string name="setting_connected">Connected</string>
+    <string name="setting_disconnected">Disconnected</string>
+    <string name="setting_default">Default</string>
+    
+    <!-- Dialog labels -->
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_save">Save</string>
+    <string name="dialog_apply">Apply</string>
+</resources>
