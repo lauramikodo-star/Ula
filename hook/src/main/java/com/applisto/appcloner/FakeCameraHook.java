@@ -1170,14 +1170,18 @@ public final class FakeCameraHook {
                 }
                 @Override
                 public void onPreviewFrame(byte[] data, Camera camera) {
-                    // Log.v(TAG, "onPreviewFrame called"); // Verbose log
-                    if (data != null && isFakeCameraActive()) {
+                    boolean active = isFakeCameraActive();
+                    if (active) {
+                        Log.i(TAG, "onPreviewFrame called. Active: true. Data len: " + (data != null ? data.length : "null"));
+                    }
+
+                    if (data != null && active) {
                         try {
                             Camera.Size size = camera.getParameters().getPreviewSize();
                             int width = size.width;
                             int height = size.height;
 
-                            Log.v(TAG, "onPreviewFrame: injecting fake data " + width + "x" + height);
+                            // Log.i(TAG, "onPreviewFrame: injecting fake data " + width + "x" + height);
 
                             // Reuse existing logic to get NV21 data
                             // We can use a simplified version of overwriteImageWithFakeData's logic
@@ -1229,6 +1233,9 @@ public final class FakeCameraHook {
                                     // Copy fake data to the provided buffer
                                     int length = Math.min(data.length, fakeData.length);
                                     System.arraycopy(fakeData, 0, data, 0, length);
+                                    Log.i(TAG, "Injected " + length + " bytes of fake data (preview size: " + width + "x" + height + ")");
+                                } else {
+                                    Log.w(TAG, "Fake data is null for " + width + "x" + height);
                                 }
                             }
                         } catch (Throwable t) {
