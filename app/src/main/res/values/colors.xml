@@ -1,0 +1,55 @@
+<resources>
+    <!-- Ocean Blue Material Design 3 Theme -->
+    <color name="colorPrimary">#006C9C</color>
+    <color name="colorPrimaryVariant">#004B6F</color>
+    <color name="colorSecondary">#4A626C</color>
+    <color name="colorSecondaryVariant">#324A53</color>
+    <color name="colorTertiary">#5B5B7D</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorOnSecondary">#FFFFFF</color>
+    <color name="colorSurface">#FDFBFF</color>
+    <color name="colorOnSurface">#1A1C1E</color>
+    <color name="colorOnSurfaceVariant">#42474E</color>
+    <color name="colorBackground">#F5FAFD</color>
+    <color name="colorError">#BA1A1A</color>
+    <color name="colorOnError">#FFFFFF</color>
+    
+    <!-- Card and container colors -->
+    <color name="cardBackground">#FFFFFF</color>
+    <color name="cardBackgroundElevated">#F0F7FA</color>
+    <color name="divider">#E0E2E5</color>
+    <color name="dividerLight">#EFF1F3</color>
+    
+    <!-- Category header colors -->
+    <color name="categoryBackground">#D1E4FF</color>
+    <color name="categoryText">#001D33</color>
+    
+    <!-- Icon tints -->
+    <color name="iconTintPrimary">#006C9C</color>
+    <color name="iconTintSecondary">#565E66</color>
+    
+    <!-- Identity Notifications feature colors -->
+    <color name="identityButtonBackground">#D1E4FF</color>
+    <color name="identityButtonText">#001D33</color>
+    <color name="successGreen">#386A20</color>
+    <color name="warningOrange">#E65100</color>
+    
+    <!-- Splash screen colors -->
+    <color name="splash_background">#006C9C</color>
+    <color name="splash_text_primary">#FFFFFF</color>
+    <color name="splash_text_secondary">#E0F3FF</color>
+    <color name="splash_text_tertiary">#B3D9FF</color>
+    <color name="splash_progress">#FFFFFF</color>
+    <color name="splash_progress_track">#004B6F</color>
+    
+    <!-- Tab colors -->
+    <color name="tab_selected">#006C9C</color>
+    <color name="tab_unselected">#70787D</color>
+    <color name="tab_indicator">#006C9C</color>
+    
+    <!-- Toggle/Switch colors -->
+    <color name="switch_thumb_checked">#006C9C</color>
+    <color name="switch_track_checked">#D1E4FF</color>
+    <color name="switch_thumb_unchecked">#70787D</color>
+    <color name="switch_track_unchecked">#E0E2E5</color>
+</resources>
