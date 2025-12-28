@@ -1154,6 +1154,131 @@ public final class FakeCameraHook {
                 callFrame.setResult(null);
             }
         });
+
+        // Hook Preview Callbacks
+        hookCamera1PreviewCallbacks();
+    }
+
+    private void hookCamera1PreviewCallbacks() {
+        try {
+            // Helper interface to avoid code duplication for the wrapper
+            abstract class PreviewCallbackWrapper implements Camera.PreviewCallback {
+                final Camera.PreviewCallback original;
+                PreviewCallbackWrapper(Camera.PreviewCallback original) {
+                    this.original = original;
+                }
+                @Override
+                public void onPreviewFrame(byte[] data, Camera camera) {
+                    if (data != null && isFakeCameraActive()) {
+                        try {
+                            Camera.Size size = camera.getParameters().getPreviewSize();
+                            int width = size.width;
+                            int height = size.height;
+
+                            // Reuse existing logic to get NV21 data
+                            // We can use a simplified version of overwriteImageWithFakeData's logic
+
+                            // We need to synchronize because sCachedYuvData and helpers are static
+                            synchronized (sProcessingLock) {
+                                Bitmap currentBitmap = getCurrentFakeImage();
+
+                                // Check if cache is valid (similar logic to overwriteImageWithFakeData)
+                                boolean useCache = !USE_RANDOM_IMAGE;
+                                boolean cacheValid = useCache &&
+                                        sCachedYuvData != null &&
+                                        sCachedWidth == width &&
+                                        sCachedHeight == height &&
+                                        sCachedFormat == ImageUtils.FORMAT_NV21; // NV21 is standard for preview
+
+                                byte[] fakeData = null;
+
+                                if (cacheValid) {
+                                    fakeData = sCachedYuvData;
+                                } else {
+                                    // Generate new frame
+                                    ImageUtils.ScaleType scaleType = FILL_IMAGE ? ImageUtils.ScaleType.CENTER_CROP : ImageUtils.ScaleType.CENTER_INSIDE;
+                                    Bitmap resizedBitmap = resizeAndAdjustBitmap(currentBitmap, width, height, scaleType);
+
+                                    if (resizedBitmap != null) {
+                                        // Update cache/buffers
+                                        // Note: bitmapToNV21 might resize sCachedPixelBuffer and sCachedNV21Buffer
+                                        if (useCache) {
+                                            sCachedYuvData = ImageUtils.bitmapToNV21(resizedBitmap, sCachedPixelBuffer, sCachedYuvData);
+                                            sCachedNV21Buffer = sCachedYuvData;
+                                            sCachedWidth = width;
+                                            sCachedHeight = height;
+                                            sCachedFormat = ImageUtils.FORMAT_NV21;
+                                            fakeData = sCachedYuvData;
+                                        } else {
+                                            fakeData = ImageUtils.bitmapToNV21(resizedBitmap, sCachedPixelBuffer, sCachedNV21Buffer);
+                                            sCachedNV21Buffer = fakeData;
+                                        }
+
+                                        // Recycle if it's a temp bitmap
+                                        if (resizedBitmap != currentBitmap && resizedBitmap != sIntermediateBitmap) {
+                                            resizedBitmap.recycle();
+                                        }
+                                    }
+                                }
+
+                                if (fakeData != null) {
+                                    // Copy fake data to the provided buffer
+                                    int length = Math.min(data.length, fakeData.length);
+                                    System.arraycopy(fakeData, 0, data, 0, length);
+                                }
+                            }
+                        } catch (Throwable t) {
+                            Log.e(TAG, "Error in onPreviewFrame wrapper", t);
+                        }
+                    }
+
+                    if (original != null) {
+                        original.onPreviewFrame(data, camera);
+                    }
+                }
+            }
+
+            // Hook setPreviewCallback
+            Method setPreviewCallback = Camera.class.getMethod("setPreviewCallback", Camera.PreviewCallback.class);
+            Hooking.pineHook(setPreviewCallback, new MethodHook() {
+                @Override
+                public void beforeCall(Pine.CallFrame callFrame) {
+                    Camera.PreviewCallback original = (Camera.PreviewCallback) callFrame.args[0];
+                    if (original != null) {
+                        callFrame.args[0] = new PreviewCallbackWrapper(original) {};
+                    }
+                }
+            });
+
+            // Hook setOneShotPreviewCallback
+            Method setOneShotPreviewCallback = Camera.class.getMethod("setOneShotPreviewCallback", Camera.PreviewCallback.class);
+            Hooking.pineHook(setOneShotPreviewCallback, new MethodHook() {
+                @Override
+                public void beforeCall(Pine.CallFrame callFrame) {
+                    Camera.PreviewCallback original = (Camera.PreviewCallback) callFrame.args[0];
+                    if (original != null) {
+                        callFrame.args[0] = new PreviewCallbackWrapper(original) {};
+                    }
+                }
+            });
+
+            // Hook setPreviewCallbackWithBuffer
+            Method setPreviewCallbackWithBuffer = Camera.class.getMethod("setPreviewCallbackWithBuffer", Camera.PreviewCallback.class);
+            Hooking.pineHook(setPreviewCallbackWithBuffer, new MethodHook() {
+                @Override
+                public void beforeCall(Pine.CallFrame callFrame) {
+                    Camera.PreviewCallback original = (Camera.PreviewCallback) callFrame.args[0];
+                    if (original != null) {
+                        callFrame.args[0] = new PreviewCallbackWrapper(original) {};
+                    }
+                }
+            });
+
+            Log.i(TAG, "Camera1 Preview Callbacks hooked");
+
+        } catch (Exception e) {
+            Log.w(TAG, "Failed to hook Camera1 preview callbacks", e);
+        }
     }
 
     private File saveToTempFile(byte[] data) {
