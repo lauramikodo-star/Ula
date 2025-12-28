@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material Design 3 Dark theme colors -->
+    <color name="colorPrimary">#D0BCFF</color>
+    <color name="colorPrimaryVariant">#E8DEF8</color>
+    <color name="colorSecondary">#CCC2DC</color>
+    <color name="colorSecondaryVariant">#E8DEF8</color>
+    <color name="colorTertiary">#EFB8C8</color>
+    <color name="colorOnPrimary">#381E72</color>
+    <color name="colorOnSecondary">#332D41</color>
+    <color name="colorSurface">#1C1B1F</color>
+    <color name="colorOnSurface">#E6E1E5</color>
+    <color name="colorOnSurfaceVariant">#CAC4D0</color>
+    <color name="colorBackground">#1C1B1F</color>
+    <color name="colorError">#F2B8B5</color>
+    <color name="colorOnError">#601410</color>
+    
+    <!-- Card and container colors -->
+    <color name="cardBackground">#2B2930</color>
+    <color name="cardBackgroundElevated">#36343B</color>
+    <color name="divider">#49454F</color>
+    <color name="dividerLight">#36343B</color>
+    
+    <!-- Category header colors -->
+    <color name="categoryBackground">#4A4458</color>
+    <color name="categoryText">#E8DEF8</color>
+    
+    <!-- Icon tints -->
+    <color name="iconTintPrimary">#D0BCFF</color>
+    <color name="iconTintSecondary">#CAC4D0</color>
+    
+    <!-- Identity Notifications feature colors -->
+    <color name="identityButtonBackground">#4A4458</color>
+    <color name="identityButtonText">#E8DEF8</color>
+    <color name="successGreen">#9CD67D</color>
+    <color name="warningOrange">#FFB74D</color>
+</resources>
