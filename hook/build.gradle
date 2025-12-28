@@ -1,0 +1,25 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.applisto.appcloner'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.applisto.appcloner"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: '../libs', include: ['*.jar'], exclude: ['api-82.jar', 'api-82-sources.jar'])
+    implementation 'top.canyie.pine:core:0.2.9'
+    implementation 'com.aliucord:Aliuhook:1.1.4'
+    implementation 'dnsjava:dnsjava:3.5.2'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'androidx.core:core:1.10.1'
+}
