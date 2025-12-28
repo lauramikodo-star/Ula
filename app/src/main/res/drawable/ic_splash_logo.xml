@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="140dp"
+    android:height="140dp"
+    android:viewportWidth="140"
+    android:viewportHeight="140">
+
+    <!-- Background circle with gradient effect -->
+    <path
+        android:pathData="M70,70m-65,0a65,65 0,1 1,130 0a65,65 0,1 1,-130 0"
+        android:fillColor="#FFFFFF" />
+    
+    <!-- Inner shadow circle -->
+    <path
+        android:pathData="M70,70m-58,0a58,58 0,1 1,116 0a58,58 0,1 1,-116 0"
+        android:fillColor="#F5F0FF" />
+    
+    <!-- Primary clone icon - front layer -->
+    <path
+        android:pathData="M45,40L80,40A10,10 0,0 1,90 50L90,85A10,10 0,0 1,80 95L45,95A10,10 0,0 1,35 85L35,50A10,10 0,0 1,45 40z"
+        android:fillColor="#7C4DFF"
+        android:strokeWidth="0" />
+    
+    <!-- Clone overlay - back layer (offset) -->
+    <path
+        android:pathData="M55,50L90,50A10,10 0,0 1,100 60L100,95A10,10 0,0 1,90 105L55,105A10,10 0,0 1,45 95L45,60A10,10 0,0 1,55 50z"
+        android:fillColor="#B388FF"
+        android:strokeWidth="0" />
+    
+    <!-- Clone icon center design - copy symbol -->
+    <path
+        android:pathData="M58,60L83,60A5,5 0,0 1,88 65L88,90A5,5 0,0 1,83 95L58,95A5,5 0,0 1,53 90L53,65A5,5 0,0 1,58 60z"
+        android:fillColor="#FFFFFF"
+        android:strokeWidth="0" />
+    
+    <!-- Inner square detail -->
+    <path
+        android:pathData="M63,68L78,68L78,87L63,87z"
+        android:fillColor="#7C4DFF"
+        android:strokeWidth="0" />
+    
+    <!-- Plus icon in center -->
+    <path
+        android:pathData="M69,72L72,72L72,76L76,76L76,79L72,79L72,83L69,83L69,79L65,79L65,76L69,76z"
+        android:fillColor="#FFFFFF"
+        android:strokeWidth="0" />
+
+</vector>
