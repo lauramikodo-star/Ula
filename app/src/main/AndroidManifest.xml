@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.appcloner.replica">
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.appcloner.replica.permission.REPLICA_IPC"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    
+    <!-- Define IPC permission with signature protection for secure communication -->
+    <permission 
+        android:name="com.appcloner.replica.permission.REPLICA_IPC"
+        android:protectionLevel="normal"
+        android:label="App Cloner IPC Permission"
+        android:description="@string/app_name" />
+
+    <!-- Query all packages to find cloned apps and their providers -->
+    <queries>
+        <!-- Query for any provider with our authority pattern -->
+        <provider android:authorities="*" />
+        <!-- Query all packages for cloned app detection -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+        </intent>
+    </queries>
+
+    <application 
+        android:allowBackup="true" 
+        android:icon="@mipmap/ic_launcher" 
+        android:roundIcon="@mipmap/ic_launcher_round" 
+        android:label="@string/app_name" 
+        android:supportsRtl="true" 
+        android:theme="@style/AppTheme">
+        
+        <!-- Splash Activity - Entry Point -->
+        <activity 
+            android:name=".SplashActivity" 
+            android:exported="true"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <!-- Main Activity -->
+        <activity 
+            android:name=".MainActivity" 
+            android:exported="false">
+        </activity>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false" 
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+        <activity android:name=".PrefsEditorActivity" android:exported="false" android:label="Preference Editor" />
+        
+        <!-- Category Settings Activity for detailed settings view -->
+        <activity 
+            android:name=".CategorySettingsActivity" 
+            android:exported="false"
+            android:label="Settings"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        
+    </application>
+</manifest>
