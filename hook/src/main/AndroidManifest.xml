@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Permissions that may be needed by hooks -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="com.appcloner.replica.permission.REPLICA_IPC" />
+    
+    <application>
+        <!-- FakeCamera Activity for image selection - dialog style to not cover entire screen -->
+        <activity 
+            android:name=".FakeCameraActivity" 
+            android:exported="true"
+            android:theme="@android:style/Theme.Material.Dialog" />
+        
+        <!-- FakeCalculator Activity - launcher replacement -->
+        <activity 
+            android:name=".FakeCalculatorActivity" 
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:excludeFromRecents="false"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Material.NoActionBar" />
+        
+        <!-- InternalBrowser Activity for WebView filtering -->
+        <activity 
+            android:name=".InternalBrowserActivity" 
+            android:exported="true"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@android:style/Theme.Material.Light.NoActionBar" />
+        
+        <!-- Data Export Receiver -->
+        <receiver
+            android:name=".DataExportReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.applisto.appcloner.ACTION_EXPORT_DATA" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Identity Regeneration Receiver so notification taps work even if the app process is dead -->
+        <receiver
+            android:name=".IdentityRegenerationReceiver"
+            android:exported="true"
+            android:permission="com.appcloner.replica.permission.REPLICA_IPC">
+            <intent-filter>
+                <action android:name="com.applisto.appcloner.ACTION_REGENERATE_IDENTITY" />
+            </intent-filter>
+        </receiver>
+        
+        <!-- Camera Control Receiver for fake camera operations -->
+        <receiver 
+            android:name=".CameraControlReceiver" 
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.applisto.appcloner.ACTION_ROTATE_CLOCKWISE" />
+                <action android:name="com.applisto.appcloner.ACTION_ROTATE_COUNTERCLOCKWISE" />
+                <action android:name="com.applisto.appcloner.ACTION_FLIP_HORIZONTALLY" />
+                <action android:name="com.applisto.appcloner.ACTION_ZOOM_IN" />
+                <action android:name="com.applisto.appcloner.ACTION_ZOOM_OUT" />
+                <action android:name="com.applisto.appcloner.ACTION_SELECT_IMAGE" />
+            </intent-filter>
+        </receiver>
+        
+        <!-- Default Provider for IPC communication with app cloner -->
+        <provider 
+            android:name=".DefaultProvider" 
+            android:authorities="com.applisto.appcloner.DefaultProvider" 
+            android:exported="true"
+            android:grantUriPermissions="true" />
+    </application>
+</manifest>
