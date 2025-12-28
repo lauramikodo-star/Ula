@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="icon_hue_value" type="id" />
+    <item name="icon_saturation_value" type="id" />
+    <item name="icon_lightness_value" type="id" />
+</resources>
