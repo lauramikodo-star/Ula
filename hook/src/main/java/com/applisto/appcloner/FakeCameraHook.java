@@ -1161,6 +1161,7 @@ public final class FakeCameraHook {
 
     private void hookCamera1PreviewCallbacks() {
         try {
+            Log.i(TAG, "Hooking Camera1 preview callbacks...");
             // Helper interface to avoid code duplication for the wrapper
             abstract class PreviewCallbackWrapper implements Camera.PreviewCallback {
                 final Camera.PreviewCallback original;
@@ -1169,11 +1170,14 @@ public final class FakeCameraHook {
                 }
                 @Override
                 public void onPreviewFrame(byte[] data, Camera camera) {
+                    // Log.v(TAG, "onPreviewFrame called"); // Verbose log
                     if (data != null && isFakeCameraActive()) {
                         try {
                             Camera.Size size = camera.getParameters().getPreviewSize();
                             int width = size.width;
                             int height = size.height;
+
+                            Log.v(TAG, "onPreviewFrame: injecting fake data " + width + "x" + height);
 
                             // Reuse existing logic to get NV21 data
                             // We can use a simplified version of overwriteImageWithFakeData's logic
@@ -1243,6 +1247,7 @@ public final class FakeCameraHook {
             Hooking.pineHook(setPreviewCallback, new MethodHook() {
                 @Override
                 public void beforeCall(Pine.CallFrame callFrame) {
+                    Log.i(TAG, "App called Camera.setPreviewCallback");
                     Camera.PreviewCallback original = (Camera.PreviewCallback) callFrame.args[0];
                     if (original != null) {
                         callFrame.args[0] = new PreviewCallbackWrapper(original) {};
@@ -1255,6 +1260,7 @@ public final class FakeCameraHook {
             Hooking.pineHook(setOneShotPreviewCallback, new MethodHook() {
                 @Override
                 public void beforeCall(Pine.CallFrame callFrame) {
+                    Log.i(TAG, "App called Camera.setOneShotPreviewCallback");
                     Camera.PreviewCallback original = (Camera.PreviewCallback) callFrame.args[0];
                     if (original != null) {
                         callFrame.args[0] = new PreviewCallbackWrapper(original) {};
@@ -1267,6 +1273,7 @@ public final class FakeCameraHook {
             Hooking.pineHook(setPreviewCallbackWithBuffer, new MethodHook() {
                 @Override
                 public void beforeCall(Pine.CallFrame callFrame) {
+                    Log.i(TAG, "App called Camera.setPreviewCallbackWithBuffer");
                     Camera.PreviewCallback original = (Camera.PreviewCallback) callFrame.args[0];
                     if (original != null) {
                         callFrame.args[0] = new PreviewCallbackWrapper(original) {};
