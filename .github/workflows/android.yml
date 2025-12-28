@@ -1,0 +1,74 @@
+name: Android Build & Release
+
+on:
+  push:
+    branches:
+      - '**'
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      TELEGRAM_BOT_TOKEN: 8016177167:AAG0nkw9a5BvGDDzq9GiDXZ5fWi_c5obOpU
+      TELEGRAM_CHAT_ID: 1352458966
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Zip Source Code
+        run: |
+          # Zip the current directory, excluding build folders and hidden git files
+          zip -r source-code.zip . -x "**/build/*" ".git/*" ".gradle/*" "*.apk"
+
+      - name: Send Files to Telegram
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1)
+          
+          APP_APK="app/build/outputs/apk/debug/app-debug.apk"
+          HOOK_APK="hook/build/outputs/apk/debug/hook-debug.apk"
+          SOURCE_ZIP="source-code.zip"
+
+          # Function to send to Telegram
+          send_to_tg() {
+            curl -s -F document=@"$1" \
+                 -F chat_id="$TELEGRAM_CHAT_ID" \
+                 -F caption="$2 %0A📝 $COMMIT_MSG" \
+                 "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendDocument"
+          }
+
+          # Upload APKs
+          [ -f "$APP_APK" ] && send_to_tg "$APP_APK" "📦 App Debug APK"
+          [ -f "$HOOK_APK" ] && send_to_tg "$HOOK_APK" "🪝 Hook Debug APK"
+          
+          # Upload Source Code
+          [ -f "$SOURCE_ZIP" ] && send_to_tg "$SOURCE_ZIP" "📂 Updated Source Code"
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            app/build/outputs/apk/debug/app-debug.apk
+            hook/build/outputs/apk/debug/hook-debug.apk
+            source-code.zip
+          tag_name: ${{ github.ref_name }}
+          draft: true
+          body: "Release build for ${{ github.ref_name }}. Includes APKs and Source Code."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
