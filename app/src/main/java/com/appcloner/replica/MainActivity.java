@@ -120,7 +120,11 @@ public class MainActivity extends AppCompatActivity {
                 "bluetooth_mac",
                 "serial_number",
                 "imei",
-                "imsi"
+                "imsi",
+                "hide_sim_operator",
+                "spoofed_operator_name",
+                "spoofed_operator_numeric",
+                "spoofed_sim_country_iso"
         ));
         categories.put("cat_privacy", Arrays.asList(
                 "hide_root",
@@ -128,6 +132,11 @@ public class MainActivity extends AppCompatActivity {
                 "DisableNetworkingWithoutVpn",
                 "NoBackgroundServices",
                 "disable_license_validation",
+                "hide_cpu_info",
+                "hide_gpu_info",
+                "gpu_vendor",
+                "gpu_renderer",
+                "gpu_version",
                 "SpoofLocation",
                 "SpoofLocationLatitude",
                 "SpoofLocationLongitude",
@@ -150,6 +159,11 @@ public class MainActivity extends AppCompatActivity {
                 "socks_proxy_port",
                 "socks_proxy_user",
                 "socks_proxy_pass",
+                "hide_dns_servers",
+                "hide_dns_servers_completely",
+                "disable_background_networking",
+                "disable_background_networking_delay",
+                "disable_background_networking_silent",
                 "mock_wifi_connection",
                 "mock_mobile_connection",
                 "mock_ethernet_connection"
