@@ -17,6 +17,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.hardware.Camera;
+import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.hardware.camera2.CameraDevice;
@@ -1052,6 +1053,8 @@ public final class FakeCameraHook {
 
     /* ---------- Camera1 API Hooking ---------- */
     private void hookCamera1APIs() throws Exception {
+        hookCamera1PreviewCallbacks();
+
         // Hook Camera.startPreview
         Method startPreviewMethod = Camera.class.getMethod("startPreview");
         Hooking.pineHook(startPreviewMethod, new MethodHook() {
@@ -1156,6 +1159,66 @@ public final class FakeCameraHook {
         });
     }
 
+    private void hookCamera1PreviewCallbacks() throws Exception {
+        Method setPreviewCallbackMethod = Camera.class.getMethod("setPreviewCallback", PreviewCallback.class);
+        Hooking.pineHook(setPreviewCallbackMethod, new MethodHook() {
+            @Override
+            public void beforeCall(Pine.CallFrame callFrame) {
+                Camera camera = (Camera) callFrame.thisObject;
+                PreviewCallback original = (PreviewCallback) callFrame.args[0];
+
+                if (original == null) return;
+
+                callFrame.args[0] = (PreviewCallback) (data, cam) -> {
+                    byte[] fakeData = getFakePreviewData(cam != null ? cam : camera);
+                    if (original != null) {
+                        original.onPreviewFrame(fakeData != null ? fakeData : data, cam != null ? cam : camera);
+                    }
+                };
+            }
+        });
+
+        Method setOneShotPreviewCallbackMethod = Camera.class.getMethod("setOneShotPreviewCallback", PreviewCallback.class);
+        Hooking.pineHook(setOneShotPreviewCallbackMethod, new MethodHook() {
+            @Override
+            public void beforeCall(Pine.CallFrame callFrame) {
+                Camera camera = (Camera) callFrame.thisObject;
+                PreviewCallback original = (PreviewCallback) callFrame.args[0];
+
+                if (original == null) return;
+
+                callFrame.args[0] = (PreviewCallback) (data, cam) -> {
+                    byte[] fakeData = getFakePreviewData(cam != null ? cam : camera);
+                    if (original != null) {
+                        original.onPreviewFrame(fakeData != null ? fakeData : data, cam != null ? cam : camera);
+                    }
+                };
+            }
+        });
+
+        Method setPreviewCallbackWithBufferMethod = Camera.class.getMethod("setPreviewCallbackWithBuffer", PreviewCallback.class);
+        Hooking.pineHook(setPreviewCallbackWithBufferMethod, new MethodHook() {
+            @Override
+            public void beforeCall(Pine.CallFrame callFrame) {
+                Camera camera = (Camera) callFrame.thisObject;
+                PreviewCallback original = (PreviewCallback) callFrame.args[0];
+
+                if (original == null) return;
+
+                callFrame.args[0] = (PreviewCallback) (data, cam) -> {
+                    byte[] fakeData = getFakePreviewData(cam != null ? cam : camera);
+                    if (fakeData != null && data != null) {
+                        System.arraycopy(fakeData, 0, data, 0, Math.min(fakeData.length, data.length));
+                    }
+
+                    if (original != null) {
+                        original.onPreviewFrame(data, cam != null ? cam : camera);
+                    }
+                };
+            }
+        });
+    }
+
     private File saveToTempFile(byte[] data) {
         try {
             File temp = File.createTempFile("fake_cam_", ".jpg", sContext.getCacheDir());
@@ -1166,6 +1229,41 @@ public final class FakeCameraHook {
         } catch (IOException e) {
             Log.e(TAG, "Failed to save temp file", e);
             return null;
+        }
+    }
+
+    private byte[] getFakePreviewData(Camera camera) {
+        if (!isFakeCameraActive() || camera == null) return null;
+
+        synchronized (sProcessingLock) {
+            try {
+                Camera.Parameters parameters = camera.getParameters();
+                Camera.Size previewSize = parameters != null ? parameters.getPreviewSize() : null;
+                if (previewSize == null) return null;
+
+                int width = previewSize.width;
+                int height = previewSize.height;
+
+                Bitmap currentBitmap = getCurrentFakeImage();
+                ImageUtils.ScaleType scaleType = FILL_IMAGE ? ImageUtils.ScaleType.CENTER_CROP : ImageUtils.ScaleType.CENTER_INSIDE;
+                Bitmap resizedBitmap = resizeAndAdjustBitmap(currentBitmap, width, height, scaleType);
+
+                if (resizedBitmap == null) {
+                    resizedBitmap = createFallbackImage(width, height);
+                }
+
+                byte[] nv21 = ImageUtils.bitmapToNV21(resizedBitmap, sCachedPixelBuffer, sCachedNV21Buffer);
+                sCachedNV21Buffer = nv21;
+
+                if (resizedBitmap != currentBitmap && resizedBitmap != sIntermediateBitmap) {
+                    resizedBitmap.recycle();
+                }
+
+                return nv21;
+            } catch (Throwable t) {
+                Log.e(TAG, "Failed to create fake preview data", t);
+                return null;
+            }
         }
     }
 
